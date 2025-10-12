@@ -95,13 +95,6 @@
         <input type="date" id="deadline" required />
         <button onclick="tambahTugas()">Tambah Tugas</button>
       </div>
-
-      <div class="datetime-box" id="datetimeBox">
-        <h2 id="currentDay">Senin</h2>
-        <p id="currentDate">11 Oktober 2025</p>
-        <p id="currentTime">19:45:30</p>
-      </div>
-
       <div class="task-list" id="taskList">
         <p class="no-tasks">Loading tugas...</p>
       </div>
@@ -291,30 +284,6 @@
           document.getElementById("search").value = "";
           cariTugas(); // reset hasil search
         }
-        // ========== WAKTU REAL-TIME (WIB) ==========
-        function updateDateTime() {
-          const now = new Date();
-
-          // Konversi waktu ke WIB (UTC+7)
-          const wibTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
-
-          const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-          const dayName = days[wibTime.getDay()];
-
-          const options = { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" };
-          const date = wibTime.toLocaleDateString("id-ID", options);
-          const time = wibTime.toLocaleTimeString("id-ID", {
-            hour12: false,
-            timeZone: "Asia/Jakarta",
-          });
-
-          document.getElementById("currentDay").textContent = dayName;
-          document.getElementById("currentDate").textContent = date;
-          document.getElementById("currentTime").textContent = time;
-        }
-
-        setInterval(updateDateTime, 1000);
-        updateDateTime();
       }
     </script>
   </body>
