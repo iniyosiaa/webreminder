@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XI TEI 1 Reminder</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <style>
+      @media (max-width: 600px) {
+        .search-box {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .search-input {
+          width: 70%; /* biar gak terlalu panjang di mobile */
+          max-width: none;
+          transition: all 0.25s ease;
+        }
+
+        .search-input:focus {
+          width: 80%; /* pas fokus, nambah dikit aja */
+        }
+
+        .close-search {
+          margin-left: 6px;
+          font-size: 18px;
+        }
+      }
+
+      .close-search {
+        cursor: pointer;
+        font-size: 16px;
+        color: #777;
+        transition: color 0.2s;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="logo">Reminder XI TEI 1</div>
+      <div class="header-icons">
+        <div class="search-icon" id="searchIcon" onclick="toggleSearch(true)">🔍</div>
+
+        <div class="search-box" id="searchBox">
+          <input type="text" class="search-input" id="search" placeholder="Cari tugas..." onkeyup="cariTugas()" />
+          <span class="close-search" onclick="toggleSearch(false)">✖</span>
+        </div>
+
+        <div class="user-icon" id="userIcon" onclick="toggleLogin()">👤</div>
+      </div>
+    </header>
+
+    <main>
+      <div class="form-container" id="formContainer">
+        <div class="welcome-admin" id="welcomeAdmin">
+          <p>Selamat datang, Admin! Kelola tugas sekarang.</p>
+          <button class="btn-small logout-btn" onclick="logout()">Logout</button>
+        </div>
+        <h2>Tambah Tugas Baru</h2>
+
+        <select id="tipe" required>
+          <option value="">Pilih Tipe Tugas</option>
+          <option value="Tugas">Tugas</option>
+          <option value="Praktik">Praktik</option>
+          <option value="Penilaian Harian (PH)">Penilaian Harian (PH)</option>
+        </select>
+
+        <select id="mapel" required onchange="autoIsiGuru()">
+          <option value="">Pilih Mapel</option>
+          <option value="Matematika">Matematika</option>
+          <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+          <option value="Fisika">Fisika</option>
+          <option value="Kimia">Kimia</option>
+          <option value="Biologi">Biologi</option>
+          <option value="Sejarah">Sejarah</option>
+          <option value="Geografi">Geografi</option>
+          <option value="Ekonomi">Ekonomi</option>
+          <option value="Seni Budaya">Seni Budaya</option>
+          <option value="Olahraga">Olahraga</option>
+          <option value="Informatika">Informatika</option>
+          <option value="Bahasa Inggris">Bahasa Inggris</option>
+        </select>
+
+        <input type="text" id="guru" placeholder="Guru otomatis" readonly />
+        <input type="text" id="judul" placeholder="Judul Tugas (misal: Latihan Bab 5)" required />
+        <textarea id="deskripsi" placeholder="Deskripsi tugas..." rows="3"></textarea>
+        <input type="date" id="deadline" required />
+        <button onclick="tambahTugas()">Tambah Tugas</button>
+      </div>
+
+      <div class="datetime-box" id="datetimeBox">
+        <h2 id="currentDay">Senin</h2>
+        <p id="currentDate">11 Oktober 2025</p>
+        <p id="currentTime">19:45:30</p>
+      </div>
+
+      <div class="task-list" id="taskList">
+        <p class="no-tasks">Loading tugas...</p>
+      </div>
+    </main>
+
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeLogin()">&times;</span>
+        <h2>Login Admin</h2>
+        <input type="password" id="password" placeholder="Masukkan password" />
+        <button onclick="login()">Masuk</button>
+      </div>
+    </div>
+
+    <script>
+      // Firebase Config (isi punyamu)
+      const firebaseConfig = {
+        apiKey: "AIzaSy...your-api-key...",
+        authDomain: "tugas-8a094.firebaseapp.com",
+        databaseURL: "https://tugas-8a094-default-rtdb.firebaseio.com/",
+        projectId: "tugas-8a094",
+        storageBucket: "tugas-8a094.appspot.com",
+        messagingSenderId: "123...",
+        appId: "1:123...:web:abc...",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+      const tugasRef = db.ref("tugas");
+
+      const ADMIN_PASSWORD = "admin123";
+      let tugasList = [];
+      let isAdmin = false;
+      let editMode = false;
+      let editingIndex = null;
+
+      // Map otomatis guru per mapel
+      const guruMap = {
+        Matematika: "Bu Siti",
+        "Bahasa Indonesia": "Pak Budi",
+        Fisika: "Bu Rina",
+        Kimia: "Pak Hendra",
+        Biologi: "Bu Tika",
+        Sejarah: "Pak Dimas",
+        Geografi: "Bu Wulan",
+        Ekonomi: "Bu Rani",
+        "Seni Budaya": "Bu Nanda",
+        Olahraga: "Pak Yoga",
+        Informatika: "Pak Andi",
+        "Bahasa Inggris": "Bu Lisa",
+      };
+
+      function autoIsiGuru() {
+        const mapel = document.getElementById("mapel").value;
+        document.getElementById("guru").value = guruMap[mapel] || "";
+      }
+
+      tugasRef.on("value", (snapshot) => {
+        const data = snapshot.val();
+        tugasList = data ? Object.entries(data).map(([id, tugas]) => ({ ...tugas, id })) : [];
+        renderTugas(!isAdmin);
+      });
+
+      function toggleLogin() {
+        if (!isAdmin) document.getElementById("loginModal").style.display = "block";
+      }
+      function closeLogin() {
+        document.getElementById("loginModal").style.display = "none";
+      }
+
+      function login() {
+        const pass = document.getElementById("password").value;
+        if (pass === ADMIN_PASSWORD) {
+          closeLogin();
+          isAdmin = true;
+          document.getElementById("formContainer").style.display = "block";
+          renderTugas(false);
+        } else alert("Password salah!");
+      }
+      function logout() {
+        isAdmin = false;
+        document.getElementById("formContainer").style.display = "none";
+        renderTugas(true);
+      }
+
+      function tambahTugas() {
+        if (!isAdmin) return alert("Hanya admin bisa tambah tugas!");
+        const mapel = document.getElementById("mapel").value;
+        const guru = document.getElementById("guru").value;
+        const tipe = document.getElementById("tipe").value;
+        const judul = document.getElementById("judul").value;
+        const deskripsi = document.getElementById("deskripsi").value;
+        const deadline = document.getElementById("deadline").value;
+
+        if (!mapel || !guru || !tipe || !judul || !deadline) return alert("Isi semua field!");
+
+        const data = { mapel, guru, tipe, judul, deskripsi, deadline };
+
+        if (editMode && editingIndex) {
+          tugasRef.child(editingIndex).update(data);
+          editMode = false;
+          editingIndex = null;
+        } else tugasRef.push(data);
+
+        document.getElementById("mapel").value = "";
+        document.getElementById("guru").value = "";
+        document.getElementById("judul").value = "";
+        document.getElementById("deskripsi").value = "";
+        document.getElementById("deadline").value = "";
+        document.getElementById("tipe").value = "";
+      }
+
+      function editTugas(id) {
+        if (!isAdmin) return;
+        const tugas = tugasList.find((t) => t.id === id);
+        if (!tugas) return;
+        editingIndex = id;
+        document.getElementById("mapel").value = tugas.mapel;
+        document.getElementById("guru").value = tugas.guru;
+        document.getElementById("judul").value = tugas.judul;
+        document.getElementById("deskripsi").value = tugas.deskripsi;
+        document.getElementById("deadline").value = tugas.deadline;
+        editMode = true;
+      }
+
+      function hapusTugas(id) {
+        if (!isAdmin) return;
+        if (confirm("Yakin hapus tugas ini?")) tugasRef.child(id).remove();
+      }
+
+      function renderTugas(guestMode = true, list = tugasList) {
+        const taskList = document.getElementById("taskList");
+        if (!list.length) {
+          taskList.innerHTML = '<p class="no-tasks">Belum ada tugas. Admin bisa menambahkannya!</p>';
+          return;
+        }
+        list.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+        taskList.innerHTML = list
+          .map((t) => {
+            const overdue = new Date(t.deadline) < new Date();
+            return `
+            <div class="task-card">
+              <div class="task-info">
+                <h3>${t.judul}</h3>
+                <p class="task-meta">
+                  <span class="mapel-badge">${t.mapel}</span> — ${t.guru}
+                </p>
+                <p class="task-type">${t.tipe}</p>
+                <p class="task-meta">${t.deskripsi || ""}</p>
+                <p class="task-meta ${overdue ? "overdue" : ""}">
+                  Deadline: ${new Date(t.deadline).toLocaleDateString("id-ID")}
+                  ${overdue ? "(Terlambat!)" : ""}
+                </p>
+              </div>
+              ${
+                !guestMode
+                  ? `<div>
+                      <button class="btn-small edit-btn" onclick="editTugas('${t.id}')">Edit</button>
+                      <button class="btn-small delete-btn" onclick="hapusTugas('${t.id}')">Hapus</button>
+                    </div>`
+                  : ""
+              }
+            </div>`;
+          })
+          .join("");
+      }
+
+      function cariTugas() {
+        const query = document.getElementById("search").value.toLowerCase();
+        const filtered = tugasList.filter((tugas) => tugas.judul.toLowerCase().includes(query) || tugas.guru.toLowerCase().includes(query) || tugas.mapel.toLowerCase().includes(query));
+        renderTugas(!isAdmin, filtered);
+      } // Close modal when clicking outside document.getElementById("loginModal").addEventListener("click", function (event) { if (event.target === this) { closeLogin(); } });
+      function toggleSearch(open) {
+        const searchBox = document.getElementById("searchBox");
+        const searchIcon = document.getElementById("searchIcon");
+
+        if (open) {
+          // buka mode search
+          searchIcon.style.display = "none";
+          searchBox.classList.add("show");
+          document.getElementById("search").focus();
+        } else {
+          // tutup mode search
+          searchBox.classList.remove("show");
+          setTimeout(() => {
+            searchIcon.style.display = "flex";
+          }, 200); // delay biar animasi keburu selesai
+          document.getElementById("search").value = "";
+          cariTugas(); // reset hasil search
+        }
+        // ========== WAKTU REAL-TIME (WIB) ==========
+        function updateDateTime() {
+          const now = new Date();
+
+          // Konversi waktu ke WIB (UTC+7)
+          const wibTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
+
+          const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+          const dayName = days[wibTime.getDay()];
+
+          const options = { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" };
+          const date = wibTime.toLocaleDateString("id-ID", options);
+          const time = wibTime.toLocaleTimeString("id-ID", {
+            hour12: false,
+            timeZone: "Asia/Jakarta",
+          });
+
+          document.getElementById("currentDay").textContent = dayName;
+          document.getElementById("currentDate").textContent = date;
+          document.getElementById("currentTime").textContent = time;
+        }
+
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+      }
+    </script>
+  </body>
+</html>
