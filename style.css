@@ -1,0 +1,1004 @@
+/* ========== RESET & FONT ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", "Inter", sans-serif;
+}
+
+:root {
+  --bg: #f4f5f3;
+  --sage: #dde2d0;
+  --sage-dark: #a8bca1;
+  --muted: #666666;
+  --text: #2f2f2f;
+  --card: #ffffff;
+  --accent: #2196f3;
+  --danger: #f44336;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========== HEADER ========== */
+header {
+  width: 100%;
+  background: var(--sage);
+  color: #2b2b2b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 99;
+  border-bottom: 1px solid #c5cab6;
+}
+
+/* logo element (use .logo in HTML) */
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #3a3f35;
+  letter-spacing: 0.3px;
+}
+
+/* ICONS */
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icons > * {
+  cursor: pointer;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.header-icons > *:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+/* ========== SEARCH BAR ========== */
+.search-box {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: all 0.22s ease;
+  will-change: opacity, transform;
+}
+
+.search-box.show {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.search-input {
+  padding: 8px 12px;
+  border: 1px solid #c9d0c3;
+  border-radius: 20px;
+  outline: none;
+  background: #f6f7f5;
+  color: #2b2b2b;
+  width: 160px;
+  max-width: 50vw;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.search-input:focus {
+  border-color: #94a58b;
+  width: 190px;
+  max-width: 65vw;
+}
+
+.close-search {
+  cursor: pointer;
+  font-size: 16px;
+  color: #6a7663;
+}
+.close-search:hover {
+  color: var(--danger);
+}
+
+/* ========== LAYOUT & MAIN ========== */
+main {
+  width: 100%;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+/* Form container */
+.form-container {
+  background: var(--card);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  margin-bottom: 24px;
+  display: none; /* shown only for admin */
+}
+
+/* small admin welcome */
+.welcome-admin {
+  background: #e8f5e8;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* inputs */
+input,
+textarea,
+select,
+button {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* button primary (single rule) */
+.btn-primary {
+  background: var(--sage-dark);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  background: #96ac8e;
+}
+
+/* small buttons */
+.btn-small {
+  padding: 6px 12px;
+  margin: 0 6px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+/* colored action buttons */
+.delete-btn {
+  background: #f44336;
+  color: #fff;
+}
+.edit-btn {
+  background: var(--accent);
+  color: #fff;
+}
+.logout-btn {
+  background: #ff9800;
+  color: #fff;
+}
+
+/* ========== TASK LIST & CARDS ========== */
+.task-list {
+  display: grid;
+  gap: 15px;
+}
+
+.task-card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
+}
+
+/* inside card */
+.task-info h3 {
+  margin: 0 0 8px;
+  color: #333;
+  font-size: 18px;
+}
+.task-meta {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 4px 0;
+}
+
+/* badges */
+.mapel-badge {
+  background: var(--sage-dark);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  margin-right: 6px;
+}
+.task-type {
+  display: inline-block;
+  background: #f0f4ff;
+  color: #4caf50;
+  padding: 6px 15px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+/* overdue */
+.overdue {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* empty state */
+.no-tasks {
+  text-align: center;
+  color: #999;
+  padding: 28px;
+  background: var(--card);
+  border-radius: 12px;
+}
+
+/* ========== LOADING STATE CARD ========== */
+.loading-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  opacity: 0.9;
+  transition: background 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+}
+
+/* kalau mau animasi shimmer biar keliatan loading */
+.loading-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.15) 45%, transparent 90%);
+  animation: shimmer 1.5s infinite;
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* modal base (login/detail) */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+}
+.modal-content {
+  background: var(--card);
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 12px;
+  width: 92%;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* ========== RESPONSIVE / MOBILE ========== */
+@media (max-width: 600px) {
+  header {
+    padding: 10px 12px;
+  }
+  .search-box {
+    position: fixed;
+    top: 62px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    width: 86%;
+    max-width: 360px;
+    background: var(--card);
+    padding: 8px 12px;
+    border-radius: 999px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    gap: 8px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .search-box.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .search-input {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 8px 10px;
+  }
+  .task-card {
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+  }
+  main {
+    padding: 0 12px;
+  }
+  .form-container {
+    padding: 16px;
+  }
+}
+
+/* ========== CUSTOM SCROLLBAR (webkit only) ========== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #c1d3c0;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a3b9a2;
+}
+::-webkit-scrollbar-track {
+  background: #f3f6f2;
+  border-radius: 999px;
+}
+:root {
+  --bg-color: #f7f7f7;
+  --text-color: #222;
+  --card-bg: #fff;
+  --header-bg: #ffffffcc;
+  --accent: #4b5563;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+body.dark {
+  --bg-color: #1f1f1f;
+  --text-color: #e5e5e5;
+  --card-bg: #2b2b2b;
+  --header-bg: #2f2f2fcc;
+  --accent: #9ca3af;
+  --shadow: rgba(0, 0, 0, 0.4);
+}
+
+/* Terapkan variable-nya */
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+header {
+  background: var(--header-bg);
+  box-shadow: 0 2px 6px var(--shadow);
+  transition: background 0.3s ease;
+}
+
+.task-card {
+  background: var(--card-bg);
+  box-shadow: 0 2px 5px var(--shadow);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.theme-toggle {
+  cursor: pointer;
+  font-size: 1.3rem;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: rotate(20deg);
+}
+/* ========== FORCE WHITE TEXT SAAT DARK MODE ========== */
+/* Jangan paksa semua teks putih */
+body.dark,
+body.dark *:not(.task-type):not(.login-container):not(.login-container *) {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* biar placeholder input juga putih */
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* biar tombol tetep kelihatan */
+body.dark button {
+  background: #2e7d32 !important;
+  color: #fff !important;
+}
+
+body.dark .delete-btn {
+  background: #f44336 !important;
+}
+
+body.dark .logout-btn {
+  background: #2e7d32 !important;
+}
+
+/* 🌿 Khusus untuk tipe tugas biar tetep ijo kalem */
+body.dark .task-type {
+  background: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+
+/* 🕶️ Fix: no-tasks card saat dark mode */
+body.dark .no-tasks {
+  background: var(--card-bg);
+  color: var(--text-color);
+  box-shadow: 0 2px 6px var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0.9;
+}
+
+/* ===============================
+   🔐 LOGIN FORM - SAGE THEME
+   =============================== */
+.login-container {
+  background: var(--sage);
+  color: #2f2f2f;
+  border-radius: 12px;
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  margin: 60px auto;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  position: relative;
+  isolation: isolate;
+  z-index: 5;
+  border: 1px solid #c5cab6;
+}
+
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2f2f2f;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #b7c5ad;
+  background: #f7faf6;
+  color: #2b2b2b;
+  transition: all 0.3s ease;
+}
+
+.login-container input:focus {
+  border-color: var(--sage-dark);
+  box-shadow: 0 0 5px rgba(145, 163, 135, 0.4);
+  outline: none;
+}
+
+.login-container button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: var(--sage-dark);
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-container button:hover {
+  background: #96ac8e;
+}
+
+/* 🌙 DARK MODE SAGE */
+body.dark .login-container {
+  background: #2e3b2f !important;
+  color: #e8f0ea !important;
+  border: 1px solid #8ca38c;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+body.dark .login-container h2 {
+  color: #e8f0ea !important;
+}
+
+body.dark .login-container input {
+  background: #3a4b3c !important;
+  border-color: #8ca38c !important;
+  color: #e8f0ea !important;
+}
+
+body.dark .login-container input::placeholder {
+  color: rgba(232, 240, 234, 0.75) !important;
+}
+
+body.dark .login-container button {
+  background: #8aa28e !important;
+  color: #fff !important;
+}
+
+body.dark .login-container button:hover {
+  background: #9fb9a3 !important;
+}
+/* 🛠️ FIX: search bar tetap hitam di dark mode */
+body.dark .search-input,
+body.dark .close-search {
+  color: #2b2b2b !important;
+}
+
+body.dark .search-input::placeholder {
+  color: rgba(43, 43, 43, 0.7) !important;
+}
+
+/* ===============================
+   🌿 PERBAIKAN UI ADMIN (THEME SAGE)
+   =============================== */
+
+/* Bungkus admin message biar nyatu */
+.welcome-admin {
+  background: var(--sage);
+  color: #2f2f2f;
+  border: 1px solid #c5cab6;
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Logout button biar nggak kepanjangan */
+.logout-btn {
+  background: var(--sage-dark);
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  width: auto; /* biar menyesuaikan panjang teks */
+  min-width: 100px; /* tetap rapi */
+  transition: all 0.2s ease;
+}
+.logout-btn:hover {
+  background: #96ac8e;
+  transform: translateY(-1px);
+}
+
+/* Form container pakai nuansa sage */
+.form-container {
+  background: var(--sage);
+  border: 1px solid #c5cab6;
+  color: #2f2f2f;
+}
+.form-container h2 {
+  color: #2f2f2f;
+  margin-bottom: 10px;
+}
+
+/* Input fields lebih halus */
+input,
+textarea,
+select {
+  background: #f9fbf8;
+  border: 1px solid #c9d0c3;
+  color: #2b2b2b;
+}
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--sage-dark);
+  box-shadow: 0 0 5px rgba(160, 175, 155, 0.4);
+}
+
+/* Tombol utama tambah tugas */
+button:not(.logout-btn):not(.edit-btn):not(.delete-btn) {
+  background: var(--sage-dark);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+button:not(.logout-btn):not(.edit-btn):not(.delete-btn):hover {
+  background: #96ac8e;
+  transform: translateY(-1px);
+}
+
+/* 🌙 Mode Gelap */
+body.dark .welcome-admin {
+  background: #2e3b2f;
+  border: 1px solid #8ca38c;
+  color: #e8f0ea;
+}
+body.dark .form-container {
+  background: #2e3b2f;
+  border: 1px solid #8ca38c;
+  color: #e8f0ea;
+}
+body.dark input,
+body.dark textarea,
+body.dark select {
+  background: #3a4b3c;
+  border: 1px solid #8ca38c;
+  color: #e8f0ea;
+}
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+  color: rgba(232, 240, 234, 0.7);
+}
+body.dark button {
+  background: #8aa28e;
+  color: #fff;
+}
+body.dark button:hover {
+  background: #9fb9a3;
+}
+
+/* ============================
+   🌿 EVENT SEKOLAH - SAGE THEME
+   ============================ */
+.event-section {
+  background: var(--sage);
+  border-radius: 16px;
+  padding: 28px;
+  margin: 40px 0;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid #c5cab6;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-title {
+  text-align: center;
+  font-size: 1.6rem;
+  color: #2f2f2f;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.event-card {
+  background: #f7faf6;
+  border-radius: 14px;
+  padding: 22px 26px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+  border: 1px solid #d4dac5;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+}
+
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.3s ease;
+}
+
+.event-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.event-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #3b4637;
+}
+
+.event-date {
+  background: var(--sage-dark);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.event-body {
+  color: #374337;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.event-body ul {
+  margin: 10px 0 10px 20px;
+  list-style-type: "🌱 ";
+}
+
+/* 🌙 Dark Mode - Sage Style */
+body.dark .event-section {
+  background: #2e3b2f !important;
+  border-color: #8ca38c;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+}
+
+body.dark .event-card {
+  background: #3a4b3c !important;
+  border-color: #8ca38c;
+  color: #e8f0ea;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+body.dark .event-card:hover {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55);
+}
+
+body.dark .event-header h3 {
+  color: #e8f0ea;
+}
+
+body.dark .event-date {
+  background: #8aa28e !important;
+  color: #fff !important;
+}
+
+body.dark .event-body {
+  color: #e8f0ea;
+}
+
+body.dark .event-body ul {
+  list-style-type: "🍃 ";
+}
+
+/* ===============================
+   🌿 EVENT COLLAPSIBLE DROPDOWN
+   =============================== */
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color 0.3s ease;
+}
+
+.event-header:hover {
+  color: #4a5a46;
+}
+
+.toggle-arrow {
+  font-size: 1.1rem;
+  color: #2f2f2f;
+  transition: transform 0.3s ease;
+}
+
+/* Konten event bisa di-expand dengan animasi */
+.event-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s ease, opacity 0.35s ease;
+  opacity: 0;
+}
+
+.event-card.open .event-body {
+  max-height: 800px; /* cukup besar utk isi konten */
+  opacity: 1;
+}
+
+.event-card.open .toggle-arrow {
+  transform: rotate(180deg);
+}
+
+/* 🌙 Dark mode dropdown */
+body.dark .event-header:hover {
+  color: #c8dbc6;
+}
+
+/* ===============================
+   🌿 EVENT LOADING SHIMMER EFFECT
+   =============================== */
+.event-loading {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.event-loading-bar {
+  height: 14px;
+  border-radius: 6px;
+  background: #d6dccb;
+  position: relative;
+  overflow: hidden;
+}
+
+.event-loading-bar.short {
+  width: 60%;
+}
+.event-loading-bar.long {
+  width: 90%;
+}
+
+/* shimmer animasi */
+.shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.25) 45%, transparent 90%);
+  animation: shimmerMove 1.6s infinite;
+}
+
+@keyframes shimmerMove {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* 🌙 Dark mode loading */
+body.dark .event-loading {
+  background: #3a4b3c;
+}
+body.dark .event-loading-bar {
+  background: #5b6e5d;
+}
+
+body.dark .toggle-arrow {
+  color: #e8f0ea;
+}
+
+/* ===========================
+   📱 RESPONSIVE EVENT MOBILE FIX
+   =========================== */
+@media (max-width: 600px) {
+  .event-section {
+    padding: 18px 14px;
+    margin: 16px 0;
+  }
+
+  .event-title {
+    font-size: 1.3rem;
+    margin-bottom: 14px;
+  }
+
+  .event-card {
+    padding: 16px 18px;
+  }
+
+  .event-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .event-header h3 {
+    font-size: 1.05rem;
+    line-height: 1.4;
+  }
+
+  .event-date {
+    display: inline-block;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    margin-top: 2px;
+  }
+
+  .toggle-arrow {
+    align-self: flex-end;
+    margin-top: 4px;
+    font-size: 1.2rem;
+  }
+
+  .event-body {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+}
+
+/* ===============================
+   🌿 BUTTON EDIT & HAPUS (SAGE THEME)
+   =============================== */
+
+/* Tombol Edit */
+.edit-btn {
+  background: var(--sage-dark);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.edit-btn:hover {
+  background: #a2b99b; /* lebih terang saat hover */
+  transform: translateY(-1px);
+}
+
+/* Tombol Hapus */
+.delete-btn {
+  background: #d45d4c; /* merah lembut biar gak terlalu keras */
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.delete-btn:hover {
+  background: #c24a3a;
+  transform: translateY(-1px);
+}
+
+/* 🌙 Dark Mode */
+body.dark .edit-btn {
+  background: #8ca38c;
+  color: #fff;
+}
+body.dark .edit-btn:hover {
+  background: #9db99e;
+}
+
+body.dark .delete-btn {
+  background: #b84c3e;
+}
+body.dark .delete-btn:hover {
+  background: #d35c4b;
+}
